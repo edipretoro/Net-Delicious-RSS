@@ -4,6 +4,7 @@ use warnings;
 use strict;
 
 use XML::RSS::Parser;
+use Carp;
 
 use parent qw( Exporter );
 
@@ -89,6 +90,23 @@ sub _build_tag_uri {
 =cut
 
 sub get_userposts {
+    my $user = shift;
+
+    my $feed_uri = _build_user_uri($user);
+    my $rss_parser = XML::RSS::Parser->new();
+    my $feed = $rss_parser->parse_uri( $feed_uri );
+    croak "Problem with $user ($feed_uri): $!" and return unless $feed;
+
+    return _get_items_from_feed( $feed );
+}
+
+sub _build_user_uri {
+    my $user = shift;
+
+    croak 'No user given!' unless $user;
+    
+    my $uri = DELICIOUS_FEED . $user;
+    return $uri;
 }
 
 =head2 get_tagposts
