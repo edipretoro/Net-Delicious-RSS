@@ -7,10 +7,14 @@ use parent qw( Exporter );
 
 our @EXPORT = ();
 our @EXPORT_OK = qw(
+  &get_popular
+  &get_userposts
+  &get_tagposts
+  &get_urlposts
 );
 our %EXPORT_TAGS = (
     all => [
-        qw(  )
+        qw( &get_popular &get_userposts &get_tagposts &urlposts )
     ],
 );
 
