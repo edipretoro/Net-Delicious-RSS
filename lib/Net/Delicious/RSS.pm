@@ -16,7 +16,7 @@ our %EXPORT_TAGS = (
 
 =head1 NAME
 
-Net::Delicious::RSS - The great new Net::Delicious::RSS!
+Net::Delicious::RSS - Query and parse RSS feeds from Delicious
 
 =head1 VERSION
 
@@ -29,34 +29,57 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
+    use Net::Delicious::RSS qw( get_popular );
 
-Perhaps a little code snippet.
+    my $feeds = get_popular();
+   
+    foreach my $feed (@$feeds) {
+      
+    }
 
-    use Net::Delicious::RSS;
-
-    my $foo = Net::Delicious::RSS->new();
-    ...
 
 =head1 EXPORT
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+=over 4
+
+=item get_popular
+
+=item get_userposts
+
+=item get_tagposts
+
+=item get_urlposts
+
+=back
 
 =head1 FUNCTIONS
 
-=head2 function1
+=head2 get_popular
 
 =cut
 
-sub function1 {
+sub get_popular {
 }
 
-=head2 function2
+=head2 get_userposts
 
 =cut
 
-sub function2 {
+sub get_userposts {
+}
+
+=head2 get_tagposts
+
+=cut
+
+sub get_tagposts {
+}
+
+=head2 get_urlposts
+
+=cut
+
+sub get_urlposts {
 }
 
 =head1 AUTHOR
