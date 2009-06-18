@@ -114,6 +114,23 @@ sub _build_user_uri {
 =cut
 
 sub get_tagposts {
+    my $tag = shift;
+
+    my $feed_uri = _build_tag_uri($tag);
+    my $rss_parser = XML::RSS::Parser->new();
+    my $feed = $rss_parser->parse_uri( $feed_uri );
+    croak "Problem with $tag ($feed_uri): $!" and return unless $feed;
+
+    return _get_items_from_feed( $feed );
+}
+
+sub _build_tag_uri {
+    my $tag = shift;
+
+    croak 'No tag given!' unless $tag;
+    
+    my $uri = DELICIOUS_FEED . 'tag/' . $tag;
+    return $uri;
 }
 
 =head2 get_urlposts
