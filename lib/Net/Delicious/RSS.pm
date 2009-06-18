@@ -3,6 +3,17 @@ package Net::Delicious::RSS;
 use warnings;
 use strict;
 
+use parent qw( Exporter );
+
+our @EXPORT = ();
+our @EXPORT_OK = qw(
+);
+our %EXPORT_TAGS = (
+    all => [
+        qw(  )
+    ],
+);
+
 =head1 NAME
 
 Net::Delicious::RSS - The great new Net::Delicious::RSS!
