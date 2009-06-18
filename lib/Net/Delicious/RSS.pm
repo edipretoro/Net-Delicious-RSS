@@ -5,6 +5,7 @@ use strict;
 
 use XML::RSS::Parser;
 use Carp;
+use Digest::MD5 qw( md5_hex );
 
 use parent qw( Exporter );
 
@@ -138,6 +139,23 @@ sub _build_tag_uri {
 =cut
 
 sub get_urlposts {
+    my $url = shift;
+
+    my $feed_uri = _build_url_uri($url);
+    my $rss_parser = XML::RSS::Parser->new();
+    my $feed = $rss_parser->parse_uri( $feed_uri );
+    croak "Problem with $url ($feed_uri): $!" and return unless $feed;
+
+    return _get_items_from_feed( $feed );
+}
+
+sub _build_url_uri {
+    my $url = shift;
+
+    croak 'No url given!' unless $url;
+    
+    my $uri = DELICIOUS_FEED . 'url/' . md5_hex($url);
+    return $uri;
 }
 
 sub _get_items_from_feed {
