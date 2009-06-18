@@ -3,7 +3,11 @@ package Net::Delicious::RSS;
 use warnings;
 use strict;
 
+use XML::RSS::Parser;
+
 use parent qw( Exporter );
+
+use constant DELICIOUS_FEED => 'http://feeds.delicious.com/v2/rss/';
 
 our @EXPORT = ();
 our @EXPORT_OK = qw(
@@ -14,7 +18,7 @@ our @EXPORT_OK = qw(
 );
 our %EXPORT_TAGS = (
     all => [
-        qw( &get_popular &get_userposts &get_tagposts &urlposts )
+        qw( &get_popular &get_userposts &get_tagposts &get_urlposts )
     ],
 );
 
@@ -63,6 +67,21 @@ our $VERSION = '0.01';
 =cut
 
 sub get_popular {
+    my $tag = shift;
+
+    my $feed_uri = _build_tag_uri($tag);
+    my $rss_parser = XML::RSS::Parser->new();
+    my $feed = $rss_parser->parse_uri( $feed_uri );
+    return _get_items_from_feed( $feed );
+}
+
+sub _build_tag_uri {
+    my $tag = shift;
+    
+    my $uri = DELICIOUS_FEED . 'popular/';
+    $uri .= $tag if $tag;
+    
+    return $uri;
 }
 
 =head2 get_userposts
@@ -84,6 +103,35 @@ sub get_tagposts {
 =cut
 
 sub get_urlposts {
+}
+
+sub _get_items_from_feed {
+    my $feed = shift;
+
+    my $items = [];
+    
+    foreach my $item ($feed->query('//item')) {
+        push @$items, {
+            href => $item->query('link')->text_content,
+            description => $item->query('title')->text_content,
+            user => $item->query('dc:creator')->text_content,
+            tags => _get_tags( $item ),
+            dt => $item->query('pubDate')->text_content,
+        };
+    }
+    
+    return $items;
+}
+
+sub _get_tags {
+    my $item = shift;
+    my @tags;
+
+    foreach my $category ($item->query('category')) {
+        push @tags, $category->text_content;
+    }
+
+    return join(' ', @tags);
 }
 
 =head1 AUTHOR
